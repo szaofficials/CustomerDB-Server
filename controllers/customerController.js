@@ -48,9 +48,9 @@ const AddCustomer = async (req, res, next) => {
         const { adrNumber, c_id, name, gender, relation, relationshipName, banksLinked, mobileNo, dob, address, addedBy, jcNo } = req.body;
         //  const addedBy = req.user._id; // Get the ID of the logged-in staff member
 
-     
- // Get the current date and time
- const currentDate = new Date();
+
+        // Get the current date and time
+        const currentDate = new Date();
 
 
 
@@ -58,9 +58,9 @@ const AddCustomer = async (req, res, next) => {
         const customerExist = await Customer.findOne({ c_id });
 
         if (customerExist) {
-         
+
             return res.status(400).json({ message: "Customer Already Exists!" });
-            
+
         }
 
 
@@ -79,14 +79,14 @@ const AddCustomer = async (req, res, next) => {
             addedBy,
             jcNo,
             addedAt: currentDate
-          
+
         });
 
         // Save the new customer object to the database
         const savedCustomer = await Customer.create(newCustomer);
-        
 
-       res.status(201).json({ message: "Customer Added Successfully"}); // Respond with the saved customer data with token
+
+        res.status(201).json({ message: "Customer Added Successfully" }); // Respond with the saved customer data with token
     } catch (error) {
         // console.error(error);
         // res.status(500).json({ message: 'Server Error Customer add nahi hora' });
@@ -107,16 +107,54 @@ const AddCustomer = async (req, res, next) => {
 
 // Define endpoint for fetching customers
 // app.get('/api/customers', async (req, res) => {
-    const customers = async (req, res) => {
-        try {
-            const customers = await Customer.find();
-            res.json(customers);
-        } catch (error) {
-            console.error('Error fetching customers:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+const customers = async (req, res) => {
+    try {
+        const customers = await Customer.find();
+        res.json(customers);
+    } catch (error) {
+        console.error('Error fetching customers:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+// *--------------------------------
+// * Logic for updating a customer
+// *---------------------------------
+
+const updateCustomer = async (req, res, next) => {
+    try {
+        const { c_id } = req.params;
+        const { adrNumber, name, gender, relation, relationshipName, banksLinked, mobileNo, dob, address, addedBy, jcNo } = req.body;
+
+        // Check if the customer exists
+        const customer = await Customer.findOne({ c_id });
+
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
         }
-    };
-    
+
+        // Update the customer with new data
+        customer.adrNumber = adrNumber || customer.adrNumber;
+        customer.name = name || customer.name;
+        customer.gender = gender || customer.gender;
+        customer.relation = relation || customer.relation;
+        customer.relationshipName = relationshipName || customer.relationshipName;
+        customer.banksLinked = banksLinked || customer.banksLinked;
+        customer.mobileNo = mobileNo || customer.mobileNo;
+        customer.dob = dob || customer.dob;
+        customer.address = address || customer.address;
+        customer.addedBy = addedBy || customer.addedBy;
+        customer.jcNo = jcNo || customer.jcNo;
+
+        // Save the updated customer
+        const updatedCustomer = await customer.save();
+
+        res.json({ message: "Customer Updated Successfully", updatedCustomer });
+    } catch (error) {
+        console.error('Error updating customer:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 
 
@@ -144,5 +182,5 @@ const deleteCustomer = async (req, res, next) => {
     }
 };
 
-module.exports = { AddCustomer, customers, checkCustomerExists, deleteCustomer };
 
+module.exports = { AddCustomer, customers, checkCustomerExists, deleteCustomer, updateCustomer };

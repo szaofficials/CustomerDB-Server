@@ -20,6 +20,9 @@ router.route("/").get(authController.home);
 // customers list
 router.route("/customers").get(customerController.customers);
 
+
+router.put('/updateCustomer/:c_id', customerController.updateCustomer);
+
  // Route for deleting a customer
 router.route("/deleteCustomer/:c_id").delete(customerController.deleteCustomer);
 
