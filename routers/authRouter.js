@@ -5,7 +5,7 @@ const AddCustomerSchema = require("../validators/authValidator");
 const validate = require("../middlewares/validateMiddleware");
 const authMiddleware= require("../middlewares/authMiddleware");
 const customerController = require('../controllers/customerController');
-
+const transactionController = require('../controllers/transactionsController');
 
 // router.get('/', (req, res) => {
 //     res
@@ -19,6 +19,7 @@ router.route("/").get(authController.home);
 
 // customers list
 router.route("/customers").get(customerController.customers);
+router.route("/customers/:c_id").get(customerController.getCustomerWithTransactions);
 
 
 router.put('/updateCustomer/:c_id', customerController.updateCustomer);
@@ -62,6 +63,37 @@ router.route("/user").get(authMiddleware, authController.user);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Route to create a new transaction
+router.post('/addtransaction', transactionController.createTransaction);
+
+// Route to get all transactions
+router.get('/transactions', transactionController.getAllTransactions);
+
+// Route to get a single transaction by ID
+router.get('/transactions/:id', transactionController.getTransactionById);
+
+// Route to update a transaction by ID
+router.put('/transactions/:id', transactionController.updateTransaction);
+
+// Route to delete a transaction by ID
+router.delete('/transactions/:id', transactionController.deleteTransaction);
+
 module.exports = router;
-
-

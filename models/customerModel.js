@@ -61,7 +61,7 @@ const customerSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  addedAt: { type: Date, default: Date.now }
+  addedAt: { type: Date, default: Date.now },
   
   //   addedBy: {
   //     type: mongoose.Schema.Types.ObjectId, // Assuming staff members have unique IDs
@@ -69,8 +69,14 @@ const customerSchema = new mongoose.Schema({
   //     required: true
   //   }
   // ,
+  transactions: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Transaction', // Reference to the Transaction model
+  }],
+  // Other customer-specific fields
+}, {
+  timestamps: true,
 });
-
 
 // Create a model using the schema
 const Customer = mongoose.model('Customer', customerSchema);

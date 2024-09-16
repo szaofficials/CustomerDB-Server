@@ -41,7 +41,7 @@ const authMiddleware = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.error("Error in authMiddleware:", error);
+        // console.error("Error in authMiddleware:", error);
         return res
             .status(401)
             .json({ message: "Unauthorized. Invalid Token." });
